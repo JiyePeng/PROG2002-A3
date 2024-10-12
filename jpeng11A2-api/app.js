@@ -28,6 +28,10 @@ app.use('/categories', categoriesRouter);
 app.use('/fundraisers', fundraisersRouter);
 app.use('/donations', donationsRouter);
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -43,9 +47,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-})
 
 module.exports = app;
