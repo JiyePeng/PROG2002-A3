@@ -33,7 +33,7 @@ export class AppService {
   }
 
   getDonations(id: number) {
-    return this.http.get(`${this.serverUrl}/donations?fundraiserid=${id}`)
+    return this.http.get(`${this.serverUrl}/donations/${id}`)
   }
 
   postDonations(donation: any) {

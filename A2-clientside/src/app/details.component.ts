@@ -19,7 +19,7 @@ import {AppService} from "./app.service";
           <h1>Fundraiser Detail</h1>
         </div>
         <div id="fundraisers">
-          <div class="fundraiser-item" *ngFor="let fundraiser of fundraiserList" [routerLink]="'/details/' + fundraiser.FUNDRAISER_ID">
+          <div class="fundraiser-item" *ngFor="let fundraiser of fundraiserList">
             <div class="fundraiser-header">
               <img src="../assets/images/logo{{fundraiser.FUNDRAISER_ID % 5 + 1}}.png" alt="Logo" class="fundraiser-logo">
               <h3>{{fundraiser.ORGANIZER}}</h3>
@@ -38,18 +38,32 @@ import {AppService} from "./app.service";
             <button (click)="donate()">Donate</button>
           </div>
         </div>
+        <div class="message">
+          <h2>Donation Detail</h2>
+          <div class="fundraiser-item" *ngFor="let donation of donationList">
+            <div class="fundraiser-details">
+              <p><strong>GIVER:</strong> {{donation.GIVER}}</p>
+              <p><strong>AMOUNT:</strong> {{donation.AMOUNT}} AUD</p>
+              <p><strong>DATE:</strong> {{donation.DATE|date}} AUD</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   `,
 })
 export class DetailsComponent {
   fundraiserList: any[] = [];
+  donationList: any[] = [];
 
   constructor(private route:ActivatedRoute,private appservice: AppService) {
     this.route.paramMap.subscribe((p:any) => {
       let id = Number(p.params.id)
       this.appservice.getFundraiserByID(id).subscribe((r:any) => {
         this.fundraiserList = r;
+      })
+      this.appservice.getDonations(id).subscribe((r:any)=> {
+        this.donationList =r;
       })
     })
   }

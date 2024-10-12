@@ -9,7 +9,7 @@ router.get('/:fundraiserid', function(req, res, next) {
   const fundraiserid = req.params.fundraiserid;
 
   connection.query(
-    'SELECT * FROM DONATION  WHERE AND FUNDRAISER_ID = ?',
+    'SELECT * FROM DONATION  WHERE FUNDRAISER_ID = ?',
     [fundraiserid],
     function (err, results, fields) {
       if (err) {
