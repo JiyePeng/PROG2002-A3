@@ -8,7 +8,7 @@ var connection = crowdfunding_db.getconnection();
 router.get('/', function(req, res, next) {
 
   connection.query(
-    'SELECT * FROM `category`',
+    'SELECT * FROM CATEGORY',
     function (err, results, fields) {
       if (err) {
         console.log(err);
