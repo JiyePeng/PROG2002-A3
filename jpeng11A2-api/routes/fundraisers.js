@@ -173,4 +173,21 @@ router.put('/:id', function(req, res, next) {
   );
 });
 
+/* Delete a fundraiser. */
+router.delete('/:id', function(req, res, next) {
+  const id = req.params.id;
+
+  connection.query(
+    'DELETE FROM FUNDRAISER WHERE FUNDRAISER_ID = ?',
+    [id],
+    function (err, results, fields) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results); // results contains rows returned by server
+      }
+    }
+  );
+});
+
 module.exports = router;
