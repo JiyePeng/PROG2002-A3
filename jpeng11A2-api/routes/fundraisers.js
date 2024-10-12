@@ -6,7 +6,7 @@ var connection = crowdfunding_db.getconnection();
 
 /* GET fundraisers listing. */
 router.get('/', function(req, res, next) {
-  let query = 'SELECT * FROM FUNDRAISER JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID  WHERE `ACTIVE` = TRUE'
+  let query = 'SELECT * FROM FUNDRAISER JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID  WHERE `ACTIVE` IS NOT NULL'
 
   const values = [];
 
@@ -23,6 +23,11 @@ router.get('/', function(req, res, next) {
   if (req.query.CATEGORY_ID) {
     query += ' AND FUNDRAISER.CATEGORY_ID = ?';
     values.push(req.query.CATEGORY_ID);
+  }
+
+  if (!req.query.ACTIVE) {
+    query += ' AND FUNDRAISER.ACTIVE = ?';
+    values.push(true);
   }
 
   connection.query(
