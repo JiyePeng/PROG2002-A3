@@ -55,4 +55,62 @@ router.get('/:id', function(req, res, next) {
   );
 });
 
+/* Create a fundraiser. */
+router.post('/', function(req, res, next) {
+  const organizer = req.body.organizer;
+  const caption = req.body.caption;
+  const target_funding = req.body.target_funding;
+  const current_funding = req.body.current_funding;
+  const city = req.body.city;
+  const active = req.body.active;
+  const category_id = req.body.category_id;
+
+  if (!organizer) {
+    res.status(400).send({ error: "organizer needed!" })
+    return
+  }
+
+  if (!caption) {
+    res.status(400).send({ error: "caption needed!" })
+    return
+  }
+
+  if (!target_funding) {
+    res.status(400).send({ error: "target_funding needed!" })
+    return
+  }
+
+  if (!current_funding) {
+    res.status(400).send({ error: "current_funding needed!" })
+    return
+  }
+
+  if (!city) {
+    res.status(400).send({ error: "city needed!" })
+    return
+  }
+
+  if (active == null) {
+    res.status(400).send({ error: "active needed!" })
+    return
+  }
+
+  if (!category_id) {
+    res.status(400).send({ error: "category_id needed!" })
+    return
+  }
+
+  connection.query(
+    'INSERT INTO FUNDRAISER(ORGANIZER, CAPTION, TARGET_FUNDING, CURRENT_FUNDING, CITY, ACTIVE, CATEGORY_ID) VALUES(?,?,?,?,?,?,?)',
+    [organizer,caption,target_funding,current_funding,city,active,category_id],
+    function (err, results, fields) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(results); // results contains rows returned by server
+      }
+    }
+  );
+});
+
 module.exports = router;
