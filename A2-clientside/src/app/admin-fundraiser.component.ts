@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {AppService} from "./app.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-index',
@@ -66,6 +66,7 @@ export class AdminFundraiserComponent {
   categoryList: any[] = [];
 
   fundraiser = {
+    id: "",
     organizer: "",
     caption: "",
     target_funding: "",
@@ -75,7 +76,20 @@ export class AdminFundraiserComponent {
     category_id: "",
   }
 
-  constructor(private appservice: AppService,private router:Router) {
+  constructor(private appservice: AppService,private router:Router,private route: ActivatedRoute) {
+    this.route.paramMap.subscribe((p:any) => {
+      let id = Number(p.params.id)
+      this.appservice.getFundraiserByID(id).subscribe((r:any) => {
+        this.fundraiser.id = r[0].FUNDRAISER_ID;
+        this.fundraiser.organizer = r[0].ORGANIZER;
+        this.fundraiser.caption = r[0].CAPTION;
+        this.fundraiser.target_funding = "" + parseInt(r[0].TARGET_FUNDING);
+        this.fundraiser.current_funding = "" + parseInt(r[0].CURRENT_FUNDING);
+        this.fundraiser.city = r[0].CITY;
+        this.fundraiser.active = r[0].ACTIVE;
+        this.fundraiser.category_id = r[0].CATEGORY_ID;
+      })
+    })
   }
 
   ngOnInit() {
@@ -92,10 +106,18 @@ export class AdminFundraiserComponent {
     } else if (!/^\b([5-9]|\d{2,})\b$/.test(this.fundraiser.target_funding) || !/^\b([5-9]|\d{2,})\b$/.test(this.fundraiser.current_funding)) {
       alert("Funding must be number(minimum 5 AUD)!")
     } else {
-      this.appservice.postFundraiser(this.fundraiser).subscribe(r => {
-        alert("Create!");
-        this.router.navigateByUrl('/admin')
-      })
+      if (!this.fundraiser.id) {
+        this.appservice.postFundraiser(this.fundraiser).subscribe(r => {
+          alert("Create!");
+          this.router.navigateByUrl('/admin')
+        })
+      } else {
+        this.appservice.putFundraiser(this.fundraiser).subscribe(r => {
+          alert("Edit!");
+          this.router.navigateByUrl('/admin')
+        })
+      }
+
     }
   }
 }

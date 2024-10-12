@@ -30,7 +30,7 @@ import {AppService} from "./app.service";
               <p><strong>Location:</strong> {{fundraiser.CITY}}</p>
               <p><strong>Category Name:</strong> {{fundraiser.NAME}}</p>
               <p>
-                <button>Edit</button>
+                <button [routerLink]="'/admin/edit/' + fundraiser.FUNDRAISER_ID">Edit</button>
                 <button>Delete</button>
               </p>
             </div>
