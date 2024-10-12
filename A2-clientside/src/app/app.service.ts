@@ -12,7 +12,7 @@ export class AppService {
     return this.http.get(`${this.serverUrl}/categories`)
   }
 
-  getFundraisers(ORGANIZER?: string, CITY?: string, CATEGORY_ID?: number, ACTIVE?: number|string): any {
+  getFundraisers(ORGANIZER?: string, CITY?: string, CATEGORY_ID?: number, ACTIVE: number|string = ""): any {
     return this.http.get(`${this.serverUrl}/fundraisers?ORGANIZER=${ORGANIZER||""}&CITY=${CITY||""}&CATEGORY_ID=${CATEGORY_ID||""}&ACTIVE=${ACTIVE === "" ? "" : ACTIVE}`)
   }
 
