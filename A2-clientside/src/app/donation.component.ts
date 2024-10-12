@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {AppService} from "./app.service";
 
 @Component({
-  selector: 'app-details',
+  selector: 'app-donation',
   template: `
     <section class="body">
       <div class="sidebar">
@@ -13,7 +13,7 @@ import {AppService} from "./app.service";
           <li><a routerLink="/search">Search</a></li>
         </ul>
       </div>
-  
+
       <div class="content">
         <div class="message">
           <h1>Fundraiser Detail</h1>
@@ -35,26 +35,33 @@ import {AppService} from "./app.service";
               <p><strong>Location:</strong> {{fundraiser.CITY}}</p>
               <p><strong>Category Name:</strong> {{fundraiser.NAME}}</p>
             </div>
-            <button [routerLink]="'/donation/' + fundraiser.FUNDRAISER_ID">Donate</button>
           </div>
         </div>
         <div class="message">
-          <h2>Donation Detail</h2>
-          <div class="fundraiser-item" *ngFor="let donation of donationList">
-            <div class="fundraiser-details">
-              <p><strong>GIVER:</strong> {{donation.GIVER}}</p>
-              <p><strong>AMOUNT:</strong> {{donation.AMOUNT}} AUD</p>
-              <p><strong>DATE:</strong> {{donation.DATE|date}} AUD</p>
+          <h2>Donation</h2>
+          <form id="fundraiser-form" (ngSubmit)="submitMyDonation()">
+            <div class="form-group">
+              <label for="giver">giver:</label>
+              <input type="text" id="giver" name="giver" [(ngModel)]="giver">
             </div>
-          </div>
+
+            <div class="form-group">
+              <label for="amount">amount:</label>
+              <input type="text" id="amount" name="amount" [(ngModel)]="amount">
+            </div>
+
+            <button type="submit">Submit my donation</button>
+          </form>
         </div>
       </div>
     </section>
   `,
 })
-export class DetailsComponent {
+export class DonationComponent {
   fundraiserList: any[] = [];
-  donationList: any[] = [];
+
+  giver = ""
+  amount = ""
 
   constructor(private route:ActivatedRoute,private appservice: AppService) {
     this.route.paramMap.subscribe((p:any) => {
@@ -62,11 +69,25 @@ export class DetailsComponent {
       this.appservice.getFundraiserByID(id).subscribe((r:any) => {
         this.fundraiserList = r;
       })
-      this.appservice.getDonations(id).subscribe((r:any)=> {
-        this.donationList =r;
-      })
     })
   }
 
-  donate() {}
+  submitMyDonation() {
+    if (!this.giver) {
+      alert("Giver should be input.")
+      return
+    }
+
+    if (!/^\b([5-9]|\d{2,})\b$/.test(this.amount)) {
+      alert("Amount should be correct(minimum 5 AUD).")
+      return
+    }
+
+    this.appservice.postDonations({ giver:this.giver,amount:this.amount,fundraiserid:this.fundraiserList[0].FUNDRAISER_ID })
+      .subscribe(r => {
+        alert(`Thank you for your donation to ${this.fundraiserList[0].CAPTION}`);
+        this.giver=""
+        this.amount=""
+      })
+  }
 }

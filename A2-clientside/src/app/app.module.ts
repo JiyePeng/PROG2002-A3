@@ -8,19 +8,21 @@ import {SearchComponent} from "./search.component";
 import {DetailsComponent} from "./details.component";
 import { HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import {DonationComponent} from "./donation.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     IndexComponent,
     SearchComponent,
-    DetailsComponent
+    DetailsComponent,
+    DonationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
