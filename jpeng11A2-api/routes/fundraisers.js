@@ -25,10 +25,12 @@ router.get('/', function(req, res, next) {
     values.push(req.query.CATEGORY_ID);
   }
 
-  if (!req.query.ACTIVE) {
+  if (req.query.ACTIVE) {
     query += ' AND FUNDRAISER.ACTIVE = ?';
-    values.push(true);
+    values.push(req.query.ACTIVE === '1');
   }
+
+  console.log(query)
 
   connection.query(
     query,
@@ -48,7 +50,7 @@ router.get('/:id', function(req, res, next) {
   const id = req.params.id;
 
   connection.query(
-    'SELECT * FROM FUNDRAISER JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID  WHERE `ACTIVE` = TRUE AND FUNDRAISER_ID = ?',
+    'SELECT * FROM FUNDRAISER JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID AND FUNDRAISER_ID = ?',
     [id],
     function (err, results, fields) {
       if (err) {
