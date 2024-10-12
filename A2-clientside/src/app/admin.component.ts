@@ -14,7 +14,7 @@ import {AppService} from "./app.service";
           <button routerLink="/admin/new">Add New</button>
         </div>
         <div id="fundraisers">
-          <div class="fundraiser-item" *ngFor="let fundraiser of fundraiserList" [routerLink]="'/details/' + fundraiser.FUNDRAISER_ID">
+          <div class="fundraiser-item" *ngFor="let fundraiser of fundraiserList">
             <div class="fundraiser-header">
               <img src="../assets/images/logo{{fundraiser.FUNDRAISER_ID % 5 + 1}}.png" alt="Logo" class="fundraiser-logo">
               <h3>{{fundraiser.ORGANIZER}}</h3>
@@ -31,7 +31,7 @@ import {AppService} from "./app.service";
               <p><strong>Category Name:</strong> {{fundraiser.NAME}}</p>
               <p>
                 <button [routerLink]="'/admin/edit/' + fundraiser.FUNDRAISER_ID">Edit</button>
-                <button>Delete</button>
+                <button (click)="deleteFun(fundraiser.FUNDRAISER_ID)">Delete</button>
               </p>
             </div>
           </div>
@@ -50,5 +50,16 @@ export class AdminComponent {
     this.appservice.getFundraisers().subscribe((r:any) => {
       this.fundraiserList = r
     })
+  }
+
+  deleteFun(id: number) {
+    if (confirm("Delete Confirm?")) {
+      this.appservice.delFundraiser(id).subscribe(res => {
+        alert("Delete!")
+        this.appservice.getFundraisers().subscribe((r:any) => {
+          this.fundraiserList = r
+        })
+      })
+    }
   }
 }
